@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Super Basil: Daily Quest</title>
+<meta name="description" content="Basil's daily Mawhiba (MMCAT) practice quest — 30-45 fresh questions a day, spaced review, and a Trophy goal." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5EE;
+    --surface: #FFFFFF;
+    --line: #E4E0D0;
+    --ink: #222222;
+    --ink-2: #6B6656;
+    --brand: #2F7A54;
+    --brand-dark: #255F42;
+    --good: #2F7A54;
+    --bad: #C6304F;
+    --warn: #D9A23B;
+    --shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15170F;
+      --surface: #1E2116;
+      --line: #2A2D1F;
+      --ink: #EDEADF;
+      --ink-2: #A9A48C;
+      --brand: #5FBE8D;
+      --brand-dark: #4AA376;
+      --shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15170F;
+    --surface: #1E2116;
+    --line: #2A2D1F;
+    --ink: #EDEADF;
+    --ink-2: #A9A48C;
+    --brand: #5FBE8D;
+    --brand-dark: #4AA376;
+    --shadow: 0 2px 10px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+  }
+  #app-shell {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px 16px 48px;
+  }
+  header.top {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 8px 0 18px;
+  }
+  header.top h1 {
+    font-size: 19px; font-weight: 800; margin:0; display:flex; align-items:center; gap:8px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .card h2 { margin: 0 0 8px; font-size: 16px; font-weight: 800; }
+  .muted { color: var(--ink-2); font-size: 14px; margin: 4px 0; }
+  .muted.small { font-size: 12.5px; }
+  .hero-row { display:flex; gap:10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .streak-pill, .trophy-pill {
+    flex:1; min-width: 140px; text-align:center; padding: 10px 12px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--line); font-weight:700; font-size: 14px;
+    box-shadow: var(--shadow);
+  }
+  .streak-pill span { color: var(--brand); font-size: 17px; margin: 0 3px; }
+  .trophy-pill.earned { background: linear-gradient(135deg, #FFD966, #F2B705); color:#3a2c00; border-color:#E0A800; }
+
+  .btn-primary {
+    display:block; width:100%; padding: 13px 16px; border:none; border-radius: 12px;
+    background: var(--brand); color:#fff; font-weight:800; font-size: 15px; cursor:pointer;
+    margin-top: 10px;
+  }
+  .btn-primary:disabled { opacity: 0.55; cursor: default; }
+  .btn-secondary {
+    flex:1; padding: 11px 14px; border-radius: 12px; border: 1.5px solid var(--line);
+    background: var(--surface); color: var(--ink); font-weight:700; font-size: 13.5px; cursor:pointer;
+    text-align:center;
+  }
+  .btn-link { background:none; border:none; color: var(--brand); font-weight:700; font-size: 13.5px; cursor:pointer; padding:4px 0; }
+  .backup-btn-row { display:flex; gap:10px; margin-top: 10px; flex-wrap: wrap; }
+  .file-btn { position: relative; overflow: hidden; }
+  .file-btn input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+
+  .trophy-row { display:flex; gap: 16px; flex-wrap: wrap; }
+  .trophy-stat { flex: 1; min-width: 220px; }
+  .trophy-stat-label { font-size: 12.5px; font-weight:700; color: var(--ink-2); margin-bottom: 4px; }
+  .trophy-stat-value { font-size: 13px; font-weight:700; margin-top: 4px; }
+  .bar-track { height: 10px; border-radius: 6px; background: var(--line); overflow:hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.3s; }
+  .deadline-line { font-weight:700; color: var(--ink); }
+
+  .domain-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .domain-mini { border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; }
+  .domain-mini-head { display:flex; gap:6px; align-items:center; font-weight:700; font-size: 13px; margin-bottom:6px; }
+  .mini-bar-track { height: 7px; border-radius: 5px; background: var(--line); overflow:hidden; }
+  .mini-bar-fill { height:100%; border-radius:5px; }
+  .domain-mini-sub { font-size: 11.5px; color: var(--ink-2); margin-top: 5px; }
+
+  /* Quiz screen */
+  .quiz-head { display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px; }
+  .quiz-progress { font-size: 13px; font-weight:700; color: var(--ink-2); }
+  .world-tag {
+    display:inline-flex; align-items:center; gap:6px; color:#fff; font-weight:800; font-size: 13px;
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 12px;
+  }
+  .qcard { background: var(--surface); border: 1.5px solid var(--world-color, var(--line)); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); }
+  .qtext { font-size: 16px; font-weight: 700; line-height: 1.5; margin-bottom: 14px; }
+  .matrix-grid { display:flex; align-items:center; gap: 2px; margin-top: 10px; flex-wrap: wrap; }
+  .matrix-blank {
+    display:inline-flex; align-items:center; justify-content:center; width: 44px; height: 44px;
+    border: 2px dashed var(--ink-2); border-radius: 8px; margin:4px; font-weight:800; color: var(--ink-2);
+  }
+  .opts { display:flex; flex-direction:column; gap: 10px; }
+  .opt {
+    display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap: 4px;
+    padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg);
+    font-size: 15px; font-weight: 600; cursor:pointer; text-align:center; min-height: 48px;
+    color: var(--ink);
+  }
+  .opt:hover:not(:disabled) { border-color: var(--world-color, var(--brand)); }
+  .opt.correct { background: color-mix(in srgb, var(--good) 18%, var(--surface)); border-color: var(--good); font-weight:800; }
+  .opt.incorrect { background: color-mix(in srgb, var(--bad) 16%, var(--surface)); border-color: var(--bad); font-weight:800; }
+  .opt.locked { opacity: 0.6; }
+  .feedback { margin-top: 16px; border-radius: 14px; padding: 16px; }
+  .feedback.good { background: color-mix(in srgb, var(--good) 14%, var(--surface)); border: 1.5px solid var(--good); }
+  .feedback.bad { background: color-mix(in srgb, var(--bad) 12%, var(--surface)); border: 1.5px solid var(--bad); }
+  .feedback-title { font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+  .feedback-explain { font-size: 14px; color: var(--ink); margin-bottom: 10px; line-height:1.5; }
+
+  /* Results */
+  .big-score { font-size: 30px; font-weight: 800; margin: 6px 0; color: var(--brand); }
+  .trophy-banner {
+    background: linear-gradient(135deg, #FFE9A8, #FFD966);
+    border: 2px solid #E0A800; border-radius: 18px; padding: 24px; text-align:center; margin-bottom: 16px;
+    color: #3a2c00;
+  }
+  .trophy-banner-emoji { font-size: 40px; }
+  .trophy-banner-title { font-size: 22px; font-weight: 900; letter-spacing: 0.5px; margin: 6px 0; }
+  .trophy-banner-sub { font-size: 14px; }
+
+  .modal-card { max-width: 480px; margin: 40px auto; }
+
+  @media (max-width: 420px) {
+    .domain-grid { grid-template-columns: 1fr; }
+    .trophy-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+  <div id="app-shell">
+    <header class="top">
+      <h1>🍃 Super Basil: Daily Quest</h1>
+    </header>
+    <div id="app"></div>
+    <p class="muted small" style="text-align:center;margin-top:18px;">Informal practice inspired by the real Mawhiba MMCAT test — not an official score or prediction.</p>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="ui.js"></script>
+  <script>initApp();</script>
+</body>
+</html>
